@@ -1,11 +1,11 @@
-# pyvm
+# pyverman
  a version manager for python
 
  # To-Do List
  |Task                            | progress   |
  |:-------------------------------|-----------:|
- | create script itself           | started    |
- | create installation method     | not started|
+ | create script itself           | complete   |
+ | create installation method     | started    |
  | create readme and documentation| started    |
 
 # Dependencies
