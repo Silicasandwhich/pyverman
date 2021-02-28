@@ -1,0 +1,146 @@
+#! /bin/bash
+
+OPTIMIZATIONS=false
+VERSION="0.0.1"
+DEPENDENCIES="build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev curl libbz2-dev liblzma-dev lzma tk tk-dev libsqlite3-dev"
+
+while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+  -h | --help )
+    echo "pyverman — a simple python version manager"
+    echo "created by silicasandwhich (https://github.com/silicasandwhich)"
+    echo "please submit any bug reports to https://github.com/silicasandwhich/pyverman"
+    echo "usage: pyverman [options] action version"
+    echo "flags:"
+    echo "   --help -h                  displays this message"
+    echo "   --enable-optimizations -O  configures python with optimizations (only affects \"install\" command)"
+    echo "   --version                  lists script version"
+    echo "   --verbose -v               doesn't route make info to /dev/null"
+    echo "   --list-dependencies -d     lists dependencies for building python"
+    echo "actions:"
+    echo "     install                  installs selected version from the internet"
+    echo "     uninstall                removes selected version from system"
+    echo "     uncache                  removes selected version's build files from cache"
+    echo "     reinstall                reinstalls python from build files"
+    exit
+    ;;
+  -O | --enable-optimizations )
+    OPTIMIZATIONS=true
+    ;;
+  --version )
+    echo $VERSION
+    exit
+    ;;
+  -d | --list-dependencies)
+    echo $DEPENDENCIES
+    exit
+    ;;
+  -v | --verbose)
+    VERBOSE=true
+    ;;
+esac; shift; done
+if [[ "$1" == '--' ]]; then shift; fi
+
+VERSION=$2
+VERSIONSHORT=${VERSION%.*}
+
+if [[ $HOME == "/root" ]]; then
+  echo "error: do not run this script as root!" >&2
+  exit 1
+fi
+
+case $1 in
+  install)
+    if [[ -z $VERSION ]]; then
+      echo "error: please specify a version to install" >&2
+      exit 1
+    fi
+    echo -n "Installing Version ${VERSION}"
+    if [[ $OPTIMIZATIONS == true ]]; then
+      echo -n " with optimizations"
+    fi
+    echo ""
+    echo "entering directory $HOME/.pyverman"
+    if [[ ! -d "$HOME/.pyverman" ]]; then
+      mkdir $HOME/.pyverman
+    fi
+    cd $HOME/.pyverman
+    echo "creating version directory"
+    if [[ ! -d $VERSION ]]; then
+      mkdir $VERSION
+    fi
+    cd $VERSION
+    echo "downloading version tarball"
+    if curl --head --silent --fail https://www.python.org/ftp/python/$VERSION/Python-$VERSION.tgz &> /dev/null; then
+      curl -o $VERSION.tgz https://www.python.org/ftp/python/$VERSION/Python-$VERSION.tgz
+    else
+     echo "error: version does not exist! (did you spell it correctly?)"
+     exit 1
+    fi
+    echo -n "unpacking tarball..."
+    tar -xzf $VERSION.tgz
+    echo "DONE"
+    echo "entering unpacked directory"
+    cd Python-$VERSION
+    echo -n "Configuring python..."
+    if [[ $VERBOSE == true ]]; then
+      if [[ $OPTIMIZATIONS == true ]]; then
+        ./configure --enable-optimizations
+      else
+        ./configure
+      fi
+    else
+      if [[ $OPTIMIZATIONS == true ]]; then
+        ./configure --enable-optimizations > /dev/null
+      else
+        ./configure &> /dev/null
+      fi
+    fi
+    echo "DONE"
+    echo "building python may take some time if optimizations are enabled"
+    echo "if this step takes longer than a few hours, an error has probably occured"
+    echo -n "building python..."
+    if [[ $VERBOSE == true ]]; then
+      make
+    else
+      make &> /dev/null
+    fi
+    echo "DONE"
+    echo -n "installing python..."
+    if [[ $VERBOSE == true ]]; then
+      sudo make altinstall
+    else
+      sudo make altinstall &> /dev/null
+    fi
+    echo "DONE"
+    
+    echo "Installation complete! use python$VERSIONSHORT to use python and pip$VERSIONSHORT to install modules"
+    exit 0
+    ;;
+  uninstall)
+    if [[ -z $VERSION ]]; then
+      echo "error: please specify a version to remove" >&2
+      exit 1
+    fi
+    if [[ ${#VERSIONSHORT} != 1 ]]; then
+      VERSION=$VERSIONSHORT
+    fi
+    echo "Removing Version $VERSION"
+    #sudo rm -rf /usr/bin/python$VERSIONSHORT
+    #sudo rm -rf /usr/lib/python$VERSIONSHORT
+    
+    ;;
+  uncache)
+    if [[ -z $VERSION ]]; then
+      echo "error: please specify a version to remove" >&2
+      exit 1
+    fi
+    echo "Removing Version ${VERSION} from cache"
+    ;;
+  reinstall)
+    if [[ -z $VERSION ]]; then
+      echo "error: please specify a version to instal" >&2
+      exit 1
+    fi
+    echo "Reinsatlling Version ${VERSION} from cache"
+    ;;
+esac;

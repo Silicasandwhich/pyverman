@@ -17,12 +17,16 @@ build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev li
 
 # Usage
 ```
-pyvm [options] action version
+pyverman [options] action version
 ```
 ## options
--h — lists options and actions  
+--help -h — lists options and actions  
 --with-optimizations — runs make with optimizations enabled  
--O — shorthand of --with-optimizations
+-O — shorthand of --with-optimizations  
+--list-dependencies — lists all dependencies  
+-d — shorthand of --list-dependencies  
+--version — list current script version  
+--verbose -v — don't redirect make output to /dev/null
 
 ## Actions
 install — installs the selected version  
