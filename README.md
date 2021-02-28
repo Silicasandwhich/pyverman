@@ -5,8 +5,8 @@
  |Task                            | progress   |
  |:-------------------------------|-----------:|
  | create script itself           | complete   |
- | create installation method     | started    |
- | create readme and documentation| started    |
+ | create installation method     | complete   |
+ | create readme and documentation| complete   |
 
 # Dependencies
 these are mostly just the dependencies for building python. If you don't have all of these installed, you will likely have an incomplete version of python.
