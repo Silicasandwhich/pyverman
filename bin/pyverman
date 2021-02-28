@@ -124,10 +124,15 @@ case $1 in
     if [[ ${#VERSIONSHORT} != 1 ]]; then
       VERSION=$VERSIONSHORT
     fi
+    if [[ ${#VERSION} != 3 ]]; then
+      echo "error: invalid version"
+      exit 1
+    fi
     echo "Removing Version $VERSION"
-    #sudo rm -rf /usr/bin/python$VERSIONSHORT
-    #sudo rm -rf /usr/lib/python$VERSIONSHORT
-    
+    sudo rm -rf /usr/bin/python$VERSION &> /dev/null
+    sudo rm -rf /usr/lib/python$VERSION &> /dev/null
+    sudo rm -rf /usr/local/bin/python$VERSION &> /dev/null
+    sudo rm -rf /usr/local/lib/python$VERSION $> /dev/null
     ;;
   uncache)
     if [[ -z $VERSION ]]; then
@@ -135,6 +140,7 @@ case $1 in
       exit 1
     fi
     echo "Removing Version ${VERSION} from cache"
+    
     ;;
   reinstall)
     if [[ -z $VERSION ]]; then
