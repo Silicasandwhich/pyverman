@@ -31,6 +31,7 @@ pyverman [options] action version
 ## Actions
 install — installs the selected version  
 uninstall — uninstalls the selected version  
+cache — download and configure selected version to cache
 uncache — removes selected version's build files from the .pyverman folder  
 reinstall — reinstalls python version using cached files
 
