@@ -16,6 +16,12 @@ build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev li
 ```
 
 # Installation
+## With Curl
+run this command:
+ ``` bash
+ bash -c "$(curl -fsSL https://raw.githubusercontent.com/silicasandwhich/pyverman/netinstall.sh)"
+ ```
+## Through the source
 1. clone the repository
 2. run ```./install.sh``` inside the pyverman directory
 3. type "install" when prompted
