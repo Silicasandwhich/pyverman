@@ -4,27 +4,29 @@ OPTIMIZATIONS=false
 VERSION="0.6.1"
 DEPENDENCIES="build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev curl libbz2-dev liblzma-dev lzma tk tk-dev libsqlite3-dev"
 
+help(){
+  echo "pyverman — a simple python version manager"
+  echo "created by silicasandwhich (https://github.com/silicasandwhich)"
+  echo "please submit any bug reports to https://github.com/silicasandwhich/pyverman"
+  echo "usage: pyverman [options] action version"
+  echo "flags:"
+  echo "   --help -h                  displays this message"
+  echo "   --enable-optimizations -O  configures python with optimizations (only affects install and cache commands)"
+  echo "   --version                  lists script version"
+  echo "   --verbose -v               doesn't route make info to /dev/null"
+  echo "   --list-dependencies -d     lists dependencies for building python"
+  echo "actions:"
+  echo "     install                  installs selected version from the internet"
+  echo "     uninstall                removes selected version from system"
+  echo "     cache                    downloads and configures selected version to cache"
+  echo "     uncache                  removes selected version's build files from cache"
+  echo "     reinstall                reinstalls python from build files"
+  echo ""
+  echo "It is also recommended to run 'sudo [insert package manager here] install < pyverman -d' before first running. this should install all required dependencies."
+}
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
   -h | --help )
-    echo "pyverman — a simple python version manager"
-    echo "created by silicasandwhich (https://github.com/silicasandwhich)"
-    echo "please submit any bug reports to https://github.com/silicasandwhich/pyverman"
-    echo "usage: pyverman [options] action version"
-    echo "flags:"
-    echo "   --help -h                  displays this message"
-    echo "   --enable-optimizations -O  configures python with optimizations (only affects install and cache commands)"
-    echo "   --version                  lists script version"
-    echo "   --verbose -v               doesn't route make info to /dev/null"
-    echo "   --list-dependencies -d     lists dependencies for building python"
-    echo "actions:"
-    echo "     install                  installs selected version from the internet"
-    echo "     uninstall                removes selected version from system"
-    echo "     cache                    downloads and configures selected version to cache"
-    echo "     uncache                  removes selected version's build files from cache"
-    echo "     reinstall                reinstalls python from build files"
-    echo ""
-    echo "It is also recommended to run 'sudo [insert package manager here] install < pyverman -d' before first running. this should install all required dependencies."
-    exit
+    help
     ;;
   -O | --enable-optimizations )
     OPTIMIZATIONS=true
@@ -235,4 +237,8 @@ case $1 in
     echo "Installation complete! use python$VERSIONSHORT to use python and pip$VERSIONSHORT to install modules"
     exit 0
     ;;
+  *)
+    help
+    ;;
+
 esac;
