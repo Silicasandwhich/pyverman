@@ -20,7 +20,7 @@ else
     sudo mkdir $HOME/.pyverman
     echo "DONE"
     echo -n "installing pyverman script..."
-    curl https://raw.githubusercontent.com/silicasandwhich/pyverman/main/bin/pyverman > ~/.pyverman
+    curl https://raw.githubusercontent.com/silicasandwhich/pyverman/main/bin/pyverman > ~/.pyverman/pyverman
     sudo cp ~/.pyverman/pyverman /usr/bin/pyverman
     rm ~/.pyverman/pyverman
     sudo chmod +x /usr/bin/pyverman
